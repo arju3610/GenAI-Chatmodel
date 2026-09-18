@@ -83,6 +83,21 @@ streamlit run chatmodels/UIchatbot.py
 
 Choose a mood, send messages in the chat box, use **Reset Chat** to clear the conversation, or enter `0` to end the current conversation.
 
+## Deploy on Streamlit Community Cloud
+
+1. Push this repository to GitHub. Do not commit `.env` or any API key.
+2. Open [share.streamlit.io](https://share.streamlit.io/) and create a new app from the repository.
+3. Set the main file path to `chatmodels/UIchatbot.py`.
+4. In the app settings, add this secret:
+
+  ```toml
+  GROQ_API_KEY = "your_groq_api_key"
+  ```
+
+5. Deploy the app. Streamlit Cloud installs the packages from `requirements.txt` automatically.
+
+For local development, keep using `.env` in the repository root and run `streamlit run chatmodels/UIchatbot.py`.
+
 ## Run individual examples
 
 ```bash

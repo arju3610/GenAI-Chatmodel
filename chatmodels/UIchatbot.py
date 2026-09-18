@@ -7,27 +7,28 @@ load_dotenv()
 from langchain_groq import ChatGroq
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
 
-
-# ---------------- MODEL ----------------
-model = ChatGroq(model="openai/gpt-oss-20b",temperature=0.9)
-
-
 # ---------------- PAGE ----------------
-st.set_page_config(
-    page_title="AI Mood Chatbot",
-    page_icon="🤖",
-    layout="centered"
-)
+st.set_page_config(page_title="AI Mood Chatbot", page_icon="🤖", layout="centered")
 
 st.title("🤖 Mood Based AI Chatbot")
 st.caption("Choose AI personality and start chatting | Type 0 to stop")
 
 
+# ---------------- MODEL ----------------
+try:
+    model = ChatGroq(model="openai/gpt-oss-20b", temperature=0.9)
+except Exception as error:
+    if "GROQ_API_KEY" in str(error):
+        st.error(
+            "GROQ_API_KEY is not configured. Add it to Streamlit secrets and reload the app."
+        )
+        st.stop()
+    raise
+
+
 # ---------------- MODE SELECTION ----------------
 mode_choice = st.radio(
-    "Choose your AI Mode:",
-    ["😡 Angry", "😂 Funny", "😢 Sad"],
-    horizontal=True
+    "Choose your AI Mode:", ["😡 Angry", "😂 Funny", "😢 Sad"], horizontal=True
 )
 
 
@@ -81,11 +82,13 @@ if user_input:
 
             if error.response.status_code == 429:
                 st.warning(
-                    "Mistral's API rate limit has been reached. Please wait a moment "
-                    "before trying again, or check your Mistral account's quota."
+                    "Groq's API rate limit has been reached. Please wait a moment "
+                    "before trying again, or check your Groq account's quota."
                 )
             else:
-                st.error(f"Mistral API request failed (HTTP {error.response.status_code}).")
+                st.error(
+                    f"Groq API request failed (HTTP {error.response.status_code})."
+                )
         except Exception:
             st.session_state.messages.pop()
             st.error("The AI response could not be generated. Please try again.")
